@@ -109,6 +109,11 @@ video {
   transition: opacity 0.4s var(--ease), transform 0.4s var(--ease);
 }
 
+.controls__group {
+  display: flex;
+  gap: 10px;
+}
+
 .player.is-ended .controls,
 .player.is-blocked .controls,
 .player.has-error .controls {
@@ -171,6 +176,36 @@ video {
 #toggleBtn .icon--play { display: none; }
 .player.is-paused #toggleBtn .icon--play { display: block; }
 .player.is-paused #toggleBtn .icon--pause { display: none; }
+
+#fullscreenBtn .icon--collapse { display: none; }
+.player.is-fullscreen #fullscreenBtn .icon--collapse { display: block; }
+.player.is-fullscreen #fullscreenBtn .icon--expand { display: none; }
+
+/* ---------- Fullscreen ---------- */
+
+.player:fullscreen {
+  width: 100%;
+  height: 100%;
+  aspect-ratio: auto;
+  border-radius: 0;
+  box-shadow: none;
+}
+
+.player:-webkit-full-screen {
+  width: 100%;
+  height: 100%;
+  aspect-ratio: auto;
+  border-radius: 0;
+  box-shadow: none;
+}
+
+.player.is-fullscreen .controls {
+  padding:
+    16px
+    max(16px, env(safe-area-inset-right))
+    max(16px, env(safe-area-inset-bottom))
+    max(16px, env(safe-area-inset-left));
+}
 
 /* ---------- Progress ---------- */
 

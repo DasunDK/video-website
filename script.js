@@ -13,6 +13,9 @@
   var soundModal = document.getElementById('soundModal');
   var playSoundBtn = document.getElementById('playSoundBtn');
   var playMutedBtn = document.getElementById('playMutedBtn');
+  var fullscreenBtn = document.getElementById('fullscreenBtn');
+
+  var isTouchDevice = window.matchMedia('(pointer: coarse)').matches;
 
   video.loop = false;
 
@@ -95,10 +98,80 @@
     show(errorBox);
   });
 
-  // Sound modal: the button tap is a user gesture, so the browser allows audio.
+  // ---------- Fullscreen ----------
+  // Element fullscreen keeps our custom controls (Android, desktop, iPad).
+  // iPhone Safari only supports fullscreen on the <video> itself (native player).
+
+  function fullscreenElement() {
+    return document.fullscreenElement || document.webkitFullscreenElement || null;
+  }
+
+  function isFullscreen() {
+    return !!fullscreenElement() || !!video.webkitDisplayingFullscreen;
+  }
+
+  function lockLandscape() {
+    var o = screen.orientation;
+    if (o && typeof o.lock === 'function' && video.videoWidth > video.videoHeight) {
+      o.lock('landscape').catch(function () {});
+    }
+  }
+
+  function enterFullscreen() {
+    var request = player.requestFullscreen || player.webkitRequestFullscreen;
+    if (request) {
+      var result = request.call(player);
+      if (result && typeof result.then === 'function') {
+        result.then(lockLandscape, function () {});
+      } else {
+        lockLandscape();
+      }
+      return;
+    }
+    if (typeof video.webkitEnterFullscreen === 'function') {
+      try { video.webkitEnterFullscreen(); } catch (e) { /* not ready yet */ }
+    }
+  }
+
+  function exitFullscreen() {
+    if (fullscreenElement()) {
+      var exit = document.exitFullscreen || document.webkitExitFullscreen;
+      if (exit) exit.call(document);
+    } else if (video.webkitDisplayingFullscreen && video.webkitExitFullscreen) {
+      video.webkitExitFullscreen();
+    }
+  }
+
+  function updateFullscreenButton() {
+    var on = !!fullscreenElement();
+    setState('is-fullscreen', on);
+    fullscreenBtn.setAttribute('aria-label', on ? 'Exit full screen' : 'Enter full screen');
+    if (!on && screen.orientation && typeof screen.orientation.unlock === 'function') {
+      screen.orientation.unlock();
+    }
+  }
+
+  var canFullscreen =
+    document.fullscreenEnabled ||
+    document.webkitFullscreenEnabled ||
+    typeof video.webkitEnterFullscreen === 'function';
+
+  if (!canFullscreen) hide(fullscreenBtn);
+
+  fullscreenBtn.addEventListener('click', function () {
+    if (isFullscreen()) exitFullscreen();
+    else enterFullscreen();
+  });
+
+  document.addEventListener('fullscreenchange', updateFullscreenButton);
+  document.addEventListener('webkitfullscreenchange', updateFullscreenButton);
+
+  // Sound modal: the button tap is a user gesture, so the browser allows audio
+  // and (on phones/tablets) lets us go straight to fullscreen.
   function startFromModal(withSound) {
     hide(soundModal);
     video.muted = !withSound;
+    if (isTouchDevice && canFullscreen) enterFullscreen();
     play();
   }
 
@@ -124,6 +197,7 @@
   // Autoplay blocked: the tap is a user gesture, so we can play with sound.
   playOverlay.addEventListener('click', function () {
     video.muted = false;
+    if (isTouchDevice && canFullscreen && !isFullscreen()) enterFullscreen();
     play();
   });
 
@@ -140,11 +214,15 @@
     play();
   });
 
-  // Space / K toggles playback on desktop
+  // Space / K toggles playback, F toggles fullscreen on desktop
   document.addEventListener('keydown', function (e) {
-    if ((e.key === ' ' || e.key === 'k') && e.target === document.body) {
+    if (e.target !== document.body) return;
+    if (e.key === ' ' || e.key === 'k') {
       e.preventDefault();
       togglePlayback();
+    } else if (e.key === 'f' && canFullscreen) {
+      if (isFullscreen()) exitFullscreen();
+      else enterFullscreen();
     }
   });
 

@@ -9,7 +9,7 @@
     <meta name="theme-color" content="#050506" />
     <meta name="description" content="A special video for you." />
     <title>A Video For You</title>
-    <link rel="stylesheet" href="style.css?v=2" />
+    <link rel="stylesheet" href="style.css?v=3" />
   </head>
   <body>
     <main class="stage">
@@ -79,6 +79,21 @@
             <span class="pill__label">Tap to Enable Sound</span>
           </button>
 
+          <div class="controls__group">
+          <button
+            class="pill pill--icon"
+            id="fullscreenBtn"
+            type="button"
+            aria-label="Enter full screen"
+          >
+            <svg class="icon icon--expand" viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M5 5h5v2H7v3H5zm9 0h5v5h-2V7h-3zM5 14h2v3h3v2H5zm12 0h2v5h-5v-2h3z" />
+            </svg>
+            <svg class="icon icon--collapse" viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M8 5h2v5H5V8h3zm6 0h2v3h3v2h-5zM5 14h5v5H8v-3H5zm9 0h5v2h-3v3h-2z" />
+            </svg>
+          </button>
+
           <button
             class="pill pill--icon"
             id="toggleBtn"
@@ -96,6 +111,7 @@
               <path d="M8 5.5v13l10.5-6.5z" />
             </svg>
           </button>
+          </div>
         </div>
 
         <div class="progress" aria-hidden="true">
@@ -135,6 +151,6 @@
       </div>
     </div>
 
-    <script src="script.js?v=2" defer></script>
+    <script src="script.js?v=3" defer></script>
   </body>
 </html>
