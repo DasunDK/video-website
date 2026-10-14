@@ -1,0 +1,140 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, viewport-fit=cover"
+    />
+    <meta name="theme-color" content="#050506" />
+    <meta name="description" content="A special video for you." />
+    <title>A Video For You</title>
+    <link rel="stylesheet" href="style.css?v=2" />
+  </head>
+  <body>
+    <main class="stage">
+      <div class="player is-loading" id="player">
+        <video
+          id="video"
+          src="https://drive.google.com/file/d/1bdWFWDhvZcjsxzH_vSa4-T5mJ4Ah2QLo/view?usp=sharing"
+          playsinline
+          webkit-playsinline
+          preload="auto"
+          disablepictureinpicture
+        ></video>
+
+        <div class="spinner" aria-hidden="true"></div>
+
+        <!-- Shown when autoplay is blocked -->
+        <button class="overlay" id="playOverlay" type="button" hidden>
+          <span class="overlay__icon">
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M8 5.5v13l10.5-6.5z" />
+            </svg>
+          </span>
+          <span class="overlay__label">Tap to Play</span>
+        </button>
+
+        <!-- Shown when the video ends -->
+        <button class="overlay" id="replayOverlay" type="button" hidden>
+          <span class="overlay__icon">
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M12 5V2L7 6l5 4V7a5 5 0 1 1-5 5H5a7 7 0 1 0 7-7z" />
+            </svg>
+          </span>
+          <span class="overlay__label">Replay Video</span>
+        </button>
+
+        <!-- Shown when the video fails to load -->
+        <div class="error" id="errorBox" role="alert" hidden>
+          <p>Sorry, the video couldn't be loaded.</p>
+          <button class="pill" id="retryBtn" type="button">Try Again</button>
+        </div>
+
+        <div class="controls" id="controls">
+          <button
+            class="pill pill--sound"
+            id="soundBtn"
+            type="button"
+            aria-pressed="false"
+          >
+            <svg
+              class="icon icon--muted"
+              viewBox="0 0 24 24"
+              aria-hidden="true"
+            >
+              <path
+                d="M4 9v6h4l5 5V4L8 9H4zm12.6 3 2.7-2.7-1.4-1.4-2.7 2.7-2.7-2.7-1.4 1.4 2.7 2.7-2.7 2.7 1.4 1.4 2.7-2.7 2.7 2.7 1.4-1.4z"
+              />
+            </svg>
+            <svg
+              class="icon icon--sound"
+              viewBox="0 0 24 24"
+              aria-hidden="true"
+            >
+              <path
+                d="M4 9v6h4l5 5V4L8 9H4zm12.5 3A4.5 4.5 0 0 0 14 8v8a4.5 4.5 0 0 0 2.5-4zM14 3.2v2.1a7 7 0 0 1 0 13.4v2.1a9 9 0 0 0 0-17.6z"
+              />
+            </svg>
+            <span class="pill__label">Tap to Enable Sound</span>
+          </button>
+
+          <button
+            class="pill pill--icon"
+            id="toggleBtn"
+            type="button"
+            aria-label="Pause"
+          >
+            <svg
+              class="icon icon--pause"
+              viewBox="0 0 24 24"
+              aria-hidden="true"
+            >
+              <path d="M7 5h3.5v14H7zm6.5 0H17v14h-3.5z" />
+            </svg>
+            <svg class="icon icon--play" viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M8 5.5v13l10.5-6.5z" />
+            </svg>
+          </button>
+        </div>
+
+        <div class="progress" aria-hidden="true">
+          <span id="progressBar"></span>
+        </div>
+      </div>
+    </main>
+
+    <!-- Asks for sound before playback; the tap lets browsers play with audio -->
+    <div
+      class="modal"
+      id="soundModal"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="soundModalTitle"
+    >
+      <div class="modal__card">
+        <span class="modal__icon">
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <path
+              d="M4 9v6h4l5 5V4L8 9H4zm12.5 3A4.5 4.5 0 0 0 14 8v8a4.5 4.5 0 0 0 2.5-4zM14 3.2v2.1a7 7 0 0 1 0 13.4v2.1a9 9 0 0 0 0-17.6z"
+            />
+          </svg>
+        </span>
+        <h1 class="modal__title" id="soundModalTitle">Turn on sound?</h1>
+        <p class="modal__text">This video is best enjoyed with sound.</p>
+        <button
+          class="modal__btn modal__btn--primary"
+          id="playSoundBtn"
+          type="button"
+        >
+          Play with Sound
+        </button>
+        <button class="modal__btn" id="playMutedBtn" type="button">
+          Play without sound
+        </button>
+      </div>
+    </div>
+
+    <script src="script.js?v=2" defer></script>
+  </body>
+</html>
