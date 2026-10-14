@@ -15,6 +15,9 @@
   var playMutedBtn = document.getElementById('playMutedBtn');
   var fullscreenBtn = document.getElementById('fullscreenBtn');
 
+  var backdrop = document.getElementById('backdrop');
+  var backdropCtx = backdrop.getContext && backdrop.getContext('2d');
+
   var isTouchDevice = window.matchMedia('(pointer: coarse)').matches;
 
   video.loop = false;
@@ -98,6 +101,52 @@
     show(errorBox);
   });
 
+  // ---------- Blurred backdrop ----------
+  // Paints the current frame onto a tiny canvas; CSS scales and blurs it.
+  // Only runs while the canvas is visible (phone layout / fullscreen).
+
+  var backdropRunning = false;
+
+  function backdropVisible() {
+    return !!backdropCtx && getComputedStyle(backdrop).display !== 'none';
+  }
+
+  function drawBackdrop() {
+    if (video.readyState >= 2) {
+      try {
+        backdropCtx.drawImage(video, 0, 0, backdrop.width, backdrop.height);
+      } catch (e) { /* frame not available */ }
+    }
+  }
+
+  function backdropLoop() {
+    if (!backdropRunning) return;
+    if (!backdropVisible()) { backdropRunning = false; return; }
+    drawBackdrop();
+    if (video.requestVideoFrameCallback) video.requestVideoFrameCallback(backdropLoop);
+    else window.requestAnimationFrame(backdropLoop);
+  }
+
+  function startBackdrop() {
+    if (backdropRunning || !backdropVisible()) return;
+    backdropRunning = true;
+    backdropLoop();
+  }
+
+  function stopBackdrop() {
+    backdropRunning = false;
+    drawBackdrop();
+  }
+
+  video.addEventListener('playing', startBackdrop);
+  video.addEventListener('pause', stopBackdrop);
+  video.addEventListener('ended', stopBackdrop);
+  video.addEventListener('loadeddata', drawBackdrop);
+  video.addEventListener('seeked', drawBackdrop);
+  window.addEventListener('resize', function () {
+    if (!video.paused) startBackdrop();
+  });
+
   // ---------- Fullscreen ----------
   // Element fullscreen keeps our custom controls (Android, desktop, iPad).
   // iPhone Safari only supports fullscreen on the <video> itself (native player).
@@ -149,6 +198,7 @@
     if (!on && screen.orientation && typeof screen.orientation.unlock === 'function') {
       screen.orientation.unlock();
     }
+    if (!video.paused) startBackdrop();
   }
 
   var canFullscreen =

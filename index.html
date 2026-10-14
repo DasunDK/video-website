@@ -9,11 +9,14 @@
     <meta name="theme-color" content="#050506" />
     <meta name="description" content="A special video for you." />
     <title>A Video For You</title>
-    <link rel="stylesheet" href="style.css?v=3" />
+    <link rel="stylesheet" href="style.css?v=4" />
   </head>
   <body>
     <main class="stage">
       <div class="player is-loading" id="player">
+        <!-- Blurred copy of the video that fills the empty space on phones -->
+        <canvas class="backdrop" id="backdrop" width="48" height="48" aria-hidden="true"></canvas>
+
         <video
           id="video"
           src="videos/video.mp4"
@@ -151,6 +154,6 @@
       </div>
     </div>
 
-    <script src="script.js?v=3" defer></script>
+    <script src="script.js?v=4" defer></script>
   </body>
 </html>

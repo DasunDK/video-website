@@ -88,11 +88,51 @@ button {
 }
 
 video {
+  position: relative;
   display: block;
   width: 100%;
   height: 100%;
   object-fit: contain;
   background: #000;
+}
+
+/* Blurred copy of the video behind it; only shown on phones and in fullscreen */
+.backdrop {
+  position: absolute;
+  inset: 0;
+  display: none;
+  width: 100%;
+  height: 100%;
+  transform: scale(1.3);
+  filter: blur(28px) brightness(0.55) saturate(1.2);
+  pointer-events: none;
+}
+
+/* ---------- Phone: full-screen layout ---------- */
+
+@media (max-width: 767px) {
+  .stage {
+    padding: 0;
+  }
+
+  .player {
+    width: 100vw;
+    height: var(--vh);
+    aspect-ratio: auto;
+    border-radius: 0;
+    box-shadow: none;
+  }
+
+  .player .backdrop { display: block; }
+  .player video { background: transparent; }
+
+  .player .controls {
+    padding:
+      16px
+      max(16px, env(safe-area-inset-right))
+      max(16px, env(safe-area-inset-bottom))
+      max(16px, env(safe-area-inset-left));
+  }
 }
 
 /* ---------- Controls ---------- */
@@ -198,6 +238,9 @@ video {
   border-radius: 0;
   box-shadow: none;
 }
+
+.player.is-fullscreen .backdrop { display: block; }
+.player.is-fullscreen video { background: transparent; }
 
 .player.is-fullscreen .controls {
   padding:
