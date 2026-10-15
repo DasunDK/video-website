@@ -9,7 +9,7 @@
     <meta name="theme-color" content="#050506" />
     <meta name="description" content="A special video for you." />
     <title>A Video For You</title>
-    <link rel="stylesheet" href="style.css?v=4" />
+    <link rel="stylesheet" href="style.css?v=5" />
   </head>
   <body>
     <main class="stage">
@@ -48,6 +48,19 @@
           <span class="overlay__label">Replay Video</span>
         </button>
 
+        <!-- Shown with the replay overlay, since the controls hide when the video ends -->
+        <a
+          class="pill end-download"
+          id="endDownloadBtn"
+          href="videos/video.mp4"
+          download="birthday-video.mp4"
+        >
+          <svg class="icon" viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M11 4h2v8.2l3.1-3.1 1.4 1.4-5.5 5.5-5.5-5.5 1.4-1.4 3.1 3.1zM5 18h14v2H5z" />
+          </svg>
+          <span class="pill__label">Download Video</span>
+        </a>
+
         <!-- Shown when the video fails to load -->
         <div class="error" id="errorBox" role="alert" hidden>
           <p>Sorry, the video couldn't be loaded.</p>
@@ -83,6 +96,19 @@
           </button>
 
           <div class="controls__group">
+          <a
+            class="pill pill--icon"
+            id="downloadBtn"
+            href="videos/video.mp4"
+            download="birthday-video.mp4"
+            aria-label="Download video"
+            title="Download video"
+          >
+            <svg class="icon" viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M11 4h2v8.2l3.1-3.1 1.4 1.4-5.5 5.5-5.5-5.5 1.4-1.4 3.1 3.1zM5 18h14v2H5z" />
+            </svg>
+          </a>
+
           <button
             class="pill pill--icon"
             id="fullscreenBtn"
@@ -154,6 +180,6 @@
       </div>
     </div>
 
-    <script src="script.js?v=4" defer></script>
+    <script src="script.js?v=5" defer></script>
   </body>
 </html>
